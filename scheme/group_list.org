@@ -1,0 +1,74 @@
+#+TITLE: group_list
+#+DATE: <2018-12-02 日>
+#+AUTHOR: 再见田园犬
+#+EMAIL: tcstory@163.com
+#+LANGUAGE: zh-CN
+#+CREATOR: Emacs 26.1 (Org mode 9.1.9)
+
+
+* group list
+
+学习了 scheme 教程里, 关于 io 这一章的内容, 不过看到了一个有意思的函数, 不过还是挺难理解的, 所以记录一下.这个函数主要是完成下面这个功能:
+
+#+BEGIN_SRC scheme
+
+; 根据一个分割的对象, 把数组给拆分开, 比如我们用 0 作为分隔符
+(group-list '(1 4 0 3 7 2 0 9 5 0 0 1 2 3) 0)
+
+; 输出
+((1 4) (3 7 2) (9 5) () (1 2 3))
+
+; 下面是函数的源码
+(define (group-list ls sep)
+  (letrec ((iter (lambda (ls0 ls1)
+		   (cond
+		    ((null? ls0) (list ls1))
+		    ((eqv? (car ls0) sep) 
+		     (cons ls1 (iter (cdr ls0) '())))
+		    (else (iter (cdr ls0) (cons (car ls0) ls1)))))))
+    (map reverse (iter ls '()))))
+
+#+END_SRC
+
+其实这个短短的函数, 里面还是有很多东西值得仔细看看的, 其实我是不太适应他实现这个逻辑的思路的, 以我最熟悉的 ~js~ 来说的话, 我会使用下面的函数来实现这个逻辑:
+
+#+BEGIN_SRC javascript
+function fn1 (list) {
+    let results = [];
+    let sub = [];
+
+    for (let item of list) {
+        if (item !== 0) {
+            sub.push(item);
+        } else {
+            results.push(sub);
+            sub = []
+        }
+    }
+
+    return results;
+}
+#+END_SRC
+
+所以当我一开始想要去通过 ~scheme~ 去实现这个代码的时候, 就是使用上面的思路, 但是发现到了后面写不通, 后面我再花了点时间, 把 ~scheme~ 的代码通过 ~js~ 来实现了一遍, 才发现了问题所在:
+
+#+BEGIN_SRC javascript
+function fn2(list) {
+    let loop = function(list0, ret) {
+        if (list0.length === 0) {
+            return new Array(ret);
+        } else if (list0[0] === 0) {
+            let tmp = [];
+            tmp.push(ret);
+            return tmp.concat(loop(list0.slice(1), []));
+        } else {
+            ret.push(list0[0]);
+            return loop(list0.slice(1), ret)
+        }
+    }
+
+    return loop(list, []);
+}
+#+END_SRC
+
+换成了我最熟悉的 ~js~ 后, 问题立刻明朗起来, 之所以我很不习惯那个 ~scheme~ 的函数, 是因为我平时根本不会使用这个的思路去解决这个问题, 而 ~scheme~ 之所以这样做, 是因为他没有那么多操作数组的函数(也可能它实际上有很多操作数组的方法, 只不过是我没有学到而已). 实际上, 你会发现第一个 ~js~ 函数很直观, 然而, 你能一下子看出来第二个 ~js~ 函数到底做了什么吗?
