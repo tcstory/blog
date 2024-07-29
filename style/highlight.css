@@ -1,12 +1,14 @@
 /*
 Monokai style - ported by Luigi Maselli - http://grigio.org
 */
+
 .hljs {
   background: #272822;
   color: #ddd;
   padding: 15px 20px;
-  display: block;
+  display: block
 }
+
 .hljs-tag,
 .hljs-keyword,
 .hljs-selector-tag,
@@ -16,9 +18,11 @@ Monokai style - ported by Luigi Maselli - http://grigio.org
 .hljs-name {
   color: #f92672;
 }
+
 .hljs-code {
   color: #66d9ef;
 }
+
 .hljs-attribute,
 .hljs-attr,
 .hljs-symbol,
@@ -26,6 +30,7 @@ Monokai style - ported by Luigi Maselli - http://grigio.org
 .hljs-link {
   color: #bf79db;
 }
+
 .hljs-string,
 .hljs-bullet,
 .hljs-subst,
@@ -42,16 +47,19 @@ Monokai style - ported by Luigi Maselli - http://grigio.org
 .hljs-template-variable {
   color: #a6e22e;
 }
+
 .hljs-title.class_,
 .hljs-class .hljs-title {
-  color: #fff;
+  color: white;
 }
+
 .hljs-comment,
 .hljs-quote,
 .hljs-deletion,
 .hljs-meta {
   color: #75715e;
 }
+
 .hljs-keyword,
 .hljs-selector-tag,
 .hljs-literal,
