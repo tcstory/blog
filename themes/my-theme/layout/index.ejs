@@ -1,0 +1,13 @@
+<%- partial('partial/header') %>
+<main class="article-list">
+    <% site.posts.sort('date', 'desc').forEach(function(post){ %>
+        <article class="article">
+            <header class="article-header">
+                <a href="<%- url_for(post.path) %>" class="title">
+                    <%- date(post.date, 'YYYY/MM/DD') %>
+                    <span class="text"><%- post.title %></span>
+                </a>
+            </header>
+        </article>
+    <% }) %>
+</main>
