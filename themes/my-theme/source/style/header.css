@@ -28,6 +28,7 @@
     text-decoration: none;
     font-size: 20px;
     color: inherit;
+    font-weight: bold;
 }
 .blog-header .nav-item > a:visited {
     color: unset;
