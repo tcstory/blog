@@ -6,6 +6,11 @@ Monokai style - ported by Luigi Maselli - http://grigio.org
   overflow: auto;
 }
 
+
+.highlight > table {
+  width: 100%;
+}
+
 .hljs {
   background: #272822;
   color: #ddd;
