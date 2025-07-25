@@ -1,6 +1,6 @@
 <%- partial('partial/header') %>
 <main class="article-list">
-    <% site.posts.sort('date', 'desc').forEach(function(post){ %>
+    <% page.posts.forEach(function(post){ %>
         <article class="article">
             <header class="article-header">
                 <a href="<%- url_for(post.path) %>" class="title">
@@ -11,3 +11,4 @@
         </article>
     <% }) %>
 </main>
+<%- partial('partial/pagination') %>

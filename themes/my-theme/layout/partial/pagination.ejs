@@ -1,0 +1,9 @@
+<div class="pagination">
+    <div><%= page.current %>/<%= page.total %></div>
+    <% if (page.prev) { %>
+        <a href="<%= url_for(page.prev === 1 ? '' : 'page/' + page.prev) %>" class="prev">上一页</a>
+    <% } %>
+    <% if (page.next) { %>
+        <a href="<%= url_for('page/' + page.next) %>" class="next">下一页</a>
+    <% } %>
+</div>

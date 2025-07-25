@@ -5,7 +5,7 @@
 .blog-header .title-wrap {
     display: flex;
     justify-content: center;
-    margin-bottom: 16px;
+    /*margin-bottom: 16px;*/
 }
 .blog-header .title {
     white-space: nowrap;

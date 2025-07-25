@@ -1,0 +1,33 @@
+.pagination {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 640px;
+    margin: auto;
+    height: 48px;
+    margin-top: 32px;
+}
+.pagination > a {
+    text-decoration: none;
+    font-size: 14px;
+    color: inherit;
+    font-weight: bold;
+    display: block;
+    height: 48px;
+    line-height: 48px;
+}
+.pagination > a:visited {
+    color: unset;
+}
+
+.pagination .prev {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.pagination .next {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
