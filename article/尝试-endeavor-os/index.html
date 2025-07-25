@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,viewport-fit=cover">
+    <title>再见田园犬</title>
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="再见田园犬">
+    <meta property="og:url" content="https://tcstory.github.io/blog">
+    <meta property="og:locale" content="zh-CN">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+           font-family: "Songti SC", -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+            background-color: #f9f9f9;
+            padding: 8px 12px;
+        }
+        .article-list {
+            max-width: 640px;
+            margin: auto;
+        }
+        .article-header > a {
+            text-decoration: none;
+        }
+        .article-header > a:visited {
+            color: #4285d3;
+        }
+        .article-header .title {
+            font-size: 20px;
+            color: #4285d3;
+        }
+        .article-header .title .text {
+            font-weight: bold;
+        }
+
+        .article-content {
+            max-width: 640px;
+            margin: auto;
+        }
+        .article-content img {
+            max-width: 100%;
+        }
+        .article-content figure {
+            margin: 0;
+        }
+    </style>
+    
+<link rel="stylesheet" href="/blog/style/header.css">
+
+    
+<link rel="stylesheet" href="/blog/style/highlight.css">
+
+    
+<link rel="stylesheet" href="/blog/style/pagination.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+<nav class="blog-header">
+    <div class="title-wrap">
+        <h1 class="title">破茧而出 化蝶飞舞</h1>
+    </div>
+    <ul class="nav">
+        <li class="nav-item"><a href="/blog">Home</a></li>
+        <li class="nav-item"><a href="/blog/about">About</a></li>
+    </ul>
+</nav>
+
+<main style="padding-top: 16px;">
+    <article class="article-content">
+        <h2 style="margin-bottom: 16px;">尝试 endeavor os</h2>
+        <p>我很找之前使用的操作系统是 Manjaro, 是安装在自己的迷你主机上的. 后面, 自己买了 thinkbook 14+ 2023 后, 就打算使用 windows 11 和 wsl2 了. 原因是我的笔记本电脑只支持 s0 睡眠, 我不久前看了 archlinux 的 wiki 后才知道原来现在 linux 能很好地支持 s0 睡眠了, 甚至比 windows 11 还好, 因为他不会像 windows 11 一样, 在睡眠的时候莫名其妙地发热. 目前使用下来, 比 windows 11 好多了.</p>
+<p>我这里记录一下, 安装的过程, 和一些后续的配置.</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>我在安装的时候, 为了稳定性, 使用了离线安装, 所以, 默认的桌面是 xfce4, 我后续要做的就是安装 gnome, 然后把 xfce4 给删掉.</p>
+<h3 id="1-删掉-xfce4"><a href="#1-删掉-xfce4" class="headerlink" title="1. 删掉 xfce4"></a>1. 删掉 xfce4</h3><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> pacman -Rns xfce4 xfce4-goodies<br><span class="hljs-built_in">rm</span> -r ~/.config/xfce4<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-安装-gnome"><a href="#2-安装-gnome" class="headerlink" title="2. 安装 gnome"></a>2. 安装 gnome</h3><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> pacman -S gnome gnome-extra<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-删掉-lightdm"><a href="#3-删掉-lightdm" class="headerlink" title="3. 删掉 lightdm"></a>3. 删掉 lightdm</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs plaintext">sudo systemctl -f enable --now GDM<br>sudo pacman -Rnsc lightdm <br></code></pre></td></tr></table></figure>
+
+<p>然后重启就可以了</p>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>接下来介绍一下, 后续的配置.</p>
+<h3 id="1-输入法"><a href="#1-输入法" class="headerlink" title="1. 输入法"></a>1. 输入法</h3><p>参考了<a target="_blank" rel="noopener" href="https://manateelazycat.github.io/2023/09/11/fcitx-best-config/">Fcitx 最佳配置实践 2023-09-11 </a>来装 fcitx, 输入法使用了<a target="_blank" rel="noopener" href="https://github.com/iDvel/rime-ice">雾凇拼音</a>. 不过由于我不太熟悉 rime, 所以, 我使用了雾凇拼音推荐的<a target="_blank" rel="noopener" href="https://github.com/Mark24Code/rime-auto-deploy">自动部署脚本</a></p>
+<h3 id="2-科学上网"><a href="#2-科学上网" class="headerlink" title="2. 科学上网"></a>2. 科学上网</h3><p>我是用的是 clash-verge, 然后配置 proxychains 能解决大部分的网络问题. 不过, 由于 proxychains 自身的缺陷, 所以, 我打算使用 lazycat 推荐的 proxy-ns, 不过配置 proxy-ns 的过程遇到了很多坑, 记录在<a target="_blank" rel="noopener" href="https://github.com/tcstory/blog/issues/24">这里</a>了. 说话, proxy-ns 确实很好用.</p>
+<h3 id="3-下拉式终端"><a href="#3-下拉式终端" class="headerlink" title="3. 下拉式终端"></a>3. 下拉式终端</h3><p>我在开发过程中, 会严重以来终端加上 tmux. 很多命令, 比如运行服务, 操作 git 都是通过终端来完成的. 我的个人习惯是, 把打开终端的快捷键映射到 <code>F2</code>, 使用到的时候, 按一下, 就能立刻切换一个终端.</p>
+<p>但是 gnome 40 以上的版本, 其实可选的下拉终端会少一点, 而且, 即使你找到了, 很多下拉终端就根本没有适配 gnome 45, 所以, 最后我只能找到了老牌的 guake terminal. 然后再配置 <code>wl-clipboard</code> 就能很好的打通系统的剪切板了.</p>
+<p>但是, 我发现, 当你想从系统剪切板往 guake 粘贴东西的时候, guake 往往会原地卡死, 比如手动 <code>toggle</code> 一下才能让他恢复, 然后也才能看到刚刚粘贴进来的内容. 后面我不得以尝试了其他的终端, 比如 ddterm 等, 发现他们都存在这个问题.</p>
+<p>在 guake 的仓库里面, 终于看到有一个人提到了相同的<a target="_blank" rel="noopener" href="https://github.com/bugaevc/wl-clipboard/issues/172">问题</a>. 按照它的做法, 我终于解决了这个问题.</p>
+<p>还有一个问题是, 当你停留在 gnome 的桌面的时候, 你会发现快捷键失效了. 为了解决这个问题, 你需要多添加一个快捷键. 在<strong>设置</strong>里, 添加一个自定义快捷键, 名字叫作 guake, 然后命令是 <code>guake-toggle</code> 就可以了.</p>
+<h3 id="4-dock"><a href="#4-dock" class="headerlink" title="4. dock"></a>4. dock</h3><p>很出名的 dash to dock 也是没有适配 gnome 45, 在这里我想吐槽一下 gnome 的兼容性. 最后, 好不容易找到了一个自从 gnome 45 的, 叫作 Dash2Dock</p>
+<p>2023-10-20 更新: dash to dock 现在已经支持 gnome 45 了, 它比 Dash2Dock 好用多了.</p>
+<h3 id="5-主题"><a href="#5-主题" class="headerlink" title="5. 主题"></a>5. 主题</h3><p>主题使用的是 <code>MAC</code> 风格的, 叫作<a target="_blank" rel="noopener" href="https://github.com/vinceliuice/WhiteSur-gtk-theme">WhiteSur-gtk-theme </a></p>
+<h3 id="6-待机方面"><a href="#6-待机方面" class="headerlink" title="6. 待机方面"></a>6. 待机方面</h3><p>同样是使用 s0 待机, 然后使用 gnome 的电池管理的默认设置, 从昨晚 20:00 88% 的电池, 到第二天 10:00 82% 的电池. 看起来似乎还可以吧</p>
+<h2 id="7-字体设置"><a href="#7-字体设置" class="headerlink" title="7. 字体设置"></a>7. 字体设置</h2><p>字体设置参考了 <a target="_blank" rel="noopener" href="https://szclsya.me/zh-cn/posts/fonts/linux-config-guide/"><br>Linux 下的字体调校指南</a>, 弄完后, 显示效果就很棒了.</p>
+<h2 id="8-fctix-输入法自动切换"><a href="#8-fctix-输入法自动切换" class="headerlink" title="8. fctix 输入法自动切换"></a>8. fctix 输入法自动切换</h2><p>我通常使用 webstorm 配合 ideavim 来写代码. 这样我能比较好地通过键盘来操作. 我的 .ideavimrc 如下所示:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">set</span> hlsearch                    <span class="hljs-string">&quot; highlight searches</span><br><span class="hljs-string">set incsearch                   &quot;</span> <span class="hljs-keyword">do</span> incremental searching, search as you <span class="hljs-built_in">type</span><br><span class="hljs-built_in">set</span> ignorecase                  <span class="hljs-string">&quot; ignore case when searching</span><br><span class="hljs-string">set smartcase                   &quot;</span> no ignorecase <span class="hljs-keyword">if</span> Uppercase char present<br><span class="hljs-built_in">set</span> clipboard+=unnamedplus  <span class="hljs-string">&quot; 使用系统粘贴板(vim用y粘贴的内容也可以通过command + c 粘贴)</span><br><span class="hljs-string">set keep-english-in-normal-and-restore-in-insert &quot;</span> 配合 IdeaVimExtension 插件, 可以在进入 normal 模式的时候, 自动切换到英文输入法<br><span class="hljs-built_in">set</span> clipboard+=ideaput<br><br><span class="hljs-built_in">let</span> mapleader=<span class="hljs-string">&quot;\&lt;space&gt;&quot;</span><br>nnoremap &lt;leader&gt;n :tabn&lt;cr&gt;<br>nnoremap &lt;leader&gt;p :tabp&lt;cr&gt;<br>nnoremap &lt;leader&gt;1 :NERDTreeFocus&lt;cr&gt;<br><br><span class="hljs-built_in">set</span> NERDTree<br></code></pre></td></tr></table></figure>
+
+<p>当然了, 我平时也会使用 neovim 来进行快速编辑, 或者查看文件, 所以, neovim 也需要类似的功能. 你只需要配合 h-hg&#x2F;fcitx.nvim 就能完成这个功能</p>
+<h3 id="9-点击-dash-to-dock-里面的挂载磁盘的图标-使用了-vscode-来打开磁盘"><a href="#9-点击-dash-to-dock-里面的挂载磁盘的图标-使用了-vscode-来打开磁盘" class="headerlink" title="9. 点击 dash to dock 里面的挂载磁盘的图标, 使用了 vscode 来打开磁盘"></a>9. 点击 dash to dock 里面的挂载磁盘的图标, 使用了 vscode 来打开磁盘</h3><p>如标题所示, 如果你点击了 dock 里面的磁盘图片, 肯定希望使用文件管理器来打开. 这个问题似乎是安装了 vscode 以后导致的. [相关的讨论在<a target="_blank" rel="noopener" href="https://gitlab.gnome.org/GNOME/nautilus/-/issues/2662">这里</a>, 使用里面提到的方法来解决就可以了, 我这边需要重启一下电脑才能让设置生效</p>
+<h3 id="10-fcitx-的其他设置"><a href="#10-fcitx-的其他设置" class="headerlink" title="10. fcitx 的其他设置"></a>10. fcitx 的其他设置</h3><h4 id="安装-Input-Method-Panel"><a href="#安装-Input-Method-Panel" class="headerlink" title="安装 Input Method Panel"></a>安装 Input Method Panel</h4><p>有一次我进入系统后, 系统提示我可以安装一个输入法相关的扩展, 然后我试了一下, 截图如下所示:</p>
+<p><img src="/blog/article/%E5%B0%9D%E8%AF%95-endeavor-os/.././%E5%B0%9D%E8%AF%95-endeavor-os/p1.webp" alt="p1" loading="lazy"><br><img src="/blog/article/%E5%B0%9D%E8%AF%95-endeavor-os/.././%E5%B0%9D%E8%AF%95-endeavor-os/p2.webp" alt="p2" loading="lazy"></p>
+<p>看起来确实美观了不少</p>
+<h4 id="fcitx-候选窗在-webstorm-中不跟随光标"><a href="#fcitx-候选窗在-webstorm-中不跟随光标" class="headerlink" title="fcitx 候选窗在 webstorm 中不跟随光标"></a>fcitx 候选窗在 webstorm 中不跟随光标</h4><p>这个问题暂时挂着, 以后等我找到好一点的方法了再处理</p>
+
+    </article>
+</main>
+</body>
+</html>

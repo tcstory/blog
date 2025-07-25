@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,viewport-fit=cover">
+    <title>再见田园犬</title>
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="再见田园犬">
+    <meta property="og:url" content="https://tcstory.github.io/blog">
+    <meta property="og:locale" content="zh-CN">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+           font-family: "Songti SC", -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+            background-color: #f9f9f9;
+            padding: 8px 12px;
+        }
+        .article-list {
+            max-width: 640px;
+            margin: auto;
+        }
+        .article-header > a {
+            text-decoration: none;
+        }
+        .article-header > a:visited {
+            color: #4285d3;
+        }
+        .article-header .title {
+            font-size: 20px;
+            color: #4285d3;
+        }
+        .article-header .title .text {
+            font-weight: bold;
+        }
+
+        .article-content {
+            max-width: 640px;
+            margin: auto;
+        }
+        .article-content img {
+            max-width: 100%;
+        }
+        .article-content figure {
+            margin: 0;
+        }
+    </style>
+    
+<link rel="stylesheet" href="/blog/style/header.css">
+
+    
+<link rel="stylesheet" href="/blog/style/highlight.css">
+
+    
+<link rel="stylesheet" href="/blog/style/pagination.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+<nav class="blog-header">
+    <div class="title-wrap">
+        <h1 class="title">破茧而出 化蝶飞舞</h1>
+    </div>
+    <ul class="nav">
+        <li class="nav-item"><a href="/blog">Home</a></li>
+        <li class="nav-item"><a href="/blog/about">About</a></li>
+    </ul>
+</nav>
+
+<main style="padding-top: 16px;">
+    <article class="article-content">
+        <h2 style="margin-bottom: 16px;">endeavor os 之代理设置</h2>
+        <p>作为程序员, 我们通常需要设置好网络, 最近, 我就从 <a target="_blank" rel="noopener" href="https://manateelazycat.github.io/2023/06/04/best-proxy/">https://manateelazycat.github.io/2023/06/04/best-proxy/</a> 了解到了一个新的代理工具 proxy-ns, 了解后, 确实比 proxychains 好用(下面我会提到 proxychains 的缺点).</p>
+<p>但是配置 proxy-ns 的过程, 也很艰难. 所以, 我记录一下, 大致需要的配置过程.</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>安装的过程我就不说了, 你可以上看上面的文章.</p>
+<h2 id="安装后的配置"><a href="#安装后的配置" class="headerlink" title="安装后的配置"></a>安装后的配置</h2><p>由于我的 clash serve 跑在端口 7890 上, 所以你需要修改一下端口, 并且我发现, 配置文件默认的 dns 服务器 <code>9.9.9.9</code> 似乎在我这里无法工作, 所以, 我把他给替换掉了.  所以, 你只需要修改下面这两项:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">SOCKS5_PORT=7890<br>DNS=8.8.8.8<br></code></pre></td></tr></table></figure>
+
+<p>然后重启服务: <code>sudo systemctl restart proxy-nsd@main.service</code></p>
+<p>然后, 执行 <code>proxy-ns curl www.google.com</code> 来观察 proxy-ns 是否正常工作</p>
+<h2 id="关闭防火墙"><a href="#关闭防火墙" class="headerlink" title="关闭防火墙"></a>关闭防火墙</h2><p>如果依旧发现 proxy-ns 无法正常工作, 那么可能是防火墙导致的. 你可以试着执行 <code>sudo systemctl stop firewalld </code> 来关闭防火墙.</p>
+<p>起码在我这里, 这样操作后, 就一切正常了.</p>
+<p>不过, 你当然不希望那么暴力的把防火墙关闭, 所以, 你可以按照下面的方法来进行配置, 让 proxy-ns 能正常工作.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">firewall-cmd --zone=public --rm-port=7890/tcp --permanent<br>firewall-cmd --reload<br></code></pre></td></tr></table></figure>
+
+<h2 id="proxychains-的缺陷"><a href="#proxychains-的缺陷" class="headerlink" title="proxychains 的缺陷"></a>proxychains 的缺陷</h2><p>上面我提到了, proxy-ns 比 proxychains 好用, 原因有两个:</p>
+<ol>
+<li>有时候, 即使里使用 proxychains 来构建或者安装软件, 但是这个软件内部的构建命令, 似乎还是不会走代理</li>
+<li>proxychains 的 proxy_dns 配置项似乎有缺陷, 当你开启它的时候(他原本就是默认开启的), 如果里执行 <code>proxychains git clone git@github.com:gukaifeng/hexo.git</code> , 那么你会遇到 <code>ssh: Could not resolve hostname github.com: Unknown error</code>. 即使我查看相关的 issue, 他们提到了这个问题已经被修复, 但是在我这里依旧会复现</li>
+</ol>
+<h2 id="proxy-ns-的-dns-代理"><a href="#proxy-ns-的-dns-代理" class="headerlink" title="proxy-ns 的 dns 代理"></a>proxy-ns 的 dns 代理</h2><p>我本来想让 proxy-ns 使用我 clash 的 dns 服务, 但是我的 dns 服务端口是 33535, 不是默认的 53. proxy-ns 的配置项里, 似乎不支持配置 dns 的端口. 所以, 对于这一块, 我是有点担心的</p>
+
+    </article>
+</main>
+</body>
+</html>
