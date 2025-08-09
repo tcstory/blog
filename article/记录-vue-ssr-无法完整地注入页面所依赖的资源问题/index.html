@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,viewport-fit=cover">
+    <title>再见田园犬</title>
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="再见田园犬">
+    <meta property="og:url" content="https://tcstory.github.io/blog">
+    <meta property="og:locale" content="zh-CN">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+           font-family: "Songti SC", -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+            background-color: #f9f9f9;
+            padding: 8px 12px;
+        }
+        .article-list {
+            max-width: 640px;
+            margin: auto;
+        }
+        .article-header > a {
+            text-decoration: none;
+        }
+        .article-header > a:visited {
+            color: #4285d3;
+        }
+        .article-header .title {
+            font-size: 20px;
+            color: #4285d3;
+        }
+        .article-header .title .text {
+            font-weight: bold;
+        }
+
+        .article-content {
+            max-width: 640px;
+            margin: auto;
+        }
+        .article-content img {
+            max-width: 100%;
+        }
+        .article-content figure {
+            margin: 0;
+        }
+    </style>
+    
+<link rel="stylesheet" href="/blog/style/header.css">
+
+    
+<link rel="stylesheet" href="/blog/style/highlight.css">
+
+    
+<link rel="stylesheet" href="/blog/style/pagination.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+<nav class="blog-header">
+    <div class="title-wrap">
+        <h1 class="title">破茧而出 化蝶飞舞</h1>
+    </div>
+    <ul class="nav">
+        <li class="nav-item"><a href="/blog">Home</a></li>
+        <li class="nav-item"><a href="/blog/about">About</a></li>
+    </ul>
+</nav>
+
+<main style="padding-top: 16px;">
+    <article class="article-content">
+        <h2 style="margin-bottom: 16px;">记录 vue ssr 无法完整地注入页面所依赖的资源问题</h2>
+        <p><strong>版本</strong></p>
+<p>2.6.x</p>
+<p><strong>可以复现的地址</strong></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/tcstory/vue-ssr-issue">https://github.com/tcstory/vue-ssr-issue</a></p>
+<p><strong>复现的步骤</strong></p>
+<ol>
+<li>npm run build</li>
+<li>npm run start</li>
+<li>分别在禁用和启动 js 的情况下, 访问 <a target="_blank" rel="noopener" href="http://localhost:3000/page1">http://localhost:3000/page1</a>, 你将会发现禁用 js 的情况下, html 文件中, 缺少某些 css 样式</li>
+</ol>
+<h2 id="这会导致什么问题呢"><a href="#这会导致什么问题呢" class="headerlink" title="这会导致什么问题呢?"></a>这会导致什么问题呢?</h2><p>其实, 是否禁用 js 来浏览页面不是问题的关键, 我们考虑下面的场景</p>
+<ol>
+<li>用户访问页面</li>
+<li>页面加载完毕后, 浏览器执行了 js, 然后注入 css</li>
+<li>css 加载完毕后, 页面更新</li>
+</ol>
+<p>主要在于, 在这个过程中, 用户能观察到页面在”抖动”, 原因是一开始加载页面的时候, 缺少了某些 css 样式, 直到 js 执行后, 这个 css 样式才被加载回来.</p>
+<h2 id="个人分析的产生这个-bug-的原因"><a href="#个人分析的产生这个-bug-的原因" class="headerlink" title="个人分析的产生这个 bug 的原因"></a>个人分析的产生这个 bug 的原因</h2><p>下面的分析, 会涉及到 webpack 相关的概念.</p>
+<p>vue 在服务端渲染的过程中, 是通过 vue-loader 在组件内部生成一串 hash, 通过这一串的 hash, 在渲染过程中, vue 就能知道当前渲染的组件, 所属于哪一个 chunk, 然后, 再把这个 chunk 相关到的 files  给注入到 html 中</p>
+<p>这个过程通常情况下, 是没有任何问题的, 除非遇到了 webpack 的 splitChunks.</p>
+<p>我们先假设有 page1 和 page2 两个页面, 以及他们共同依赖的 btn1.vue 文件</p>
+<ol>
+<li>page1.vue 依赖 btn1.vue</li>
+<li>page2.vue 依赖 btn1.vue</li>
+<li>btn1.vue 依赖了 btn1.css</li>
+</ol>
+<p>通过构建, 你能拿到下面几个文件</p>
+<ol>
+<li>page1.js</li>
+<li>page2.js</li>
+<li>page1~page2.js(这个文件包含了组件的 js 和 css 代码)</li>
+</ol>
+<p>btn1.vue 组件被打包到了 page1~page2.js 中, 由于这个 js 文件包含了组件所需的 js 和 css 代码, 所以, 资源的注入是正常的</p>
+<p>但是, 如果你多了一个 page3 页面, 并且, 这个页面也依赖了 btn1.css, 这个时候, 经过构建, 你将会拿到下面这些文件</p>
+<ol>
+<li>page1.js</li>
+<li>page2.js</li>
+<li>page3.js</li>
+<li>page1~page2.js (这个文件包含了 btn1.vue 的 js 代码)</li>
+<li>page1~page2 ~page3.js (这个文件包含了 btn.css 的代码)</li>
+</ol>
+<p>webpack 在打包过程当中, 首先生成了 page1~ page2 chunk, 然后, 它发现, 这个 chunk 和 page3 chunk 都共同依赖了 btn1.css 这个模块, 所以, webpack 就继续拆包, 最后就生成了 page1 ~page2 ~page3 chunk.</p>
+<p>在 ssr 渲染过程中, vue 只能知道 btn1 被打包进入了  page1~page2.js, 但是却不知道 css 被抽离到别的文件中了. 导致 btn.css 不会被注入到 html 中.</p>
+<p>其实这些被抽离出去的 chunk, 通过他的 sibling 也能拿到相关的信息, 只是即使有了这些信息也不好判断哪些 sibling 应该被注入到 html 中</p>
+<p>issue: <a target="_blank" rel="noopener" href="https://github.com/vuejs/vue/issues/12143">https://github.com/vuejs/vue/issues/12143</a></p>
+
+    </article>
+</main>
+</body>
+</html>
