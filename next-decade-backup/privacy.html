@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Next Decade Backup 个人备份工具的功能说明与 Google Drive 数据处理政策。">
+<title>隐私政策 · Next Decade Backup</title>
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<main>
+<nav aria-label="页面导航"><a href="./">应用说明</a><a href="./privacy.html">隐私政策</a></nav>
+<h1>Next Decade Backup 隐私政策</h1>
+<p>更新日期：2026-11-02</p>
+<p>本政策说明 Next Decade Backup 个人备份工具如何访问、使用、保存和传输 Google 用户数据。工具在用户自己的电脑上运行，通过 rclone 访问用户授权的 Google Drive。</p>
+<h2>访问和使用的数据</h2>
+<p>工具根据用户配置的任务处理本地文件及其名称、路径、大小、修改时间等信息。它会读取 Google Drive 的相关目录、文件元数据和存储配额，将选定的文件内容上传到用户自己的云盘，并维护目标目录及被覆盖文件的历史副本。</p>
+<p>Google Drive OAuth 读写权限允许访问的范围可能大于当前任务范围。工具通过任务路径与排除规则限制实际操作，不将这些配置描述为 OAuth 权限隔离机制。</p>
+<p>这些数据仅用于执行用户选择的备份任务、比较变化、保存旧版本，以及展示运行状态和排查故障。不将 Google 用户数据用于广告、出售、建立用户画像或训练 AI 模型。</p>
+<h2>数据保存与传输</h2>
+<ul>
+<li>本地原始文件保留在用户电脑上。</li>
+<li>备份文件和历史副本保存在用户选择的 Google Drive 账号中，由 Google 按其服务政策处理。</li>
+<li>OAuth 客户端信息和授权令牌保存在用户电脑的 rclone 配置文件中；工具不要求用户提供 Google 密码。</li>
+<li>任务配置和运行状态保存在用户电脑上。运行日志可能包含文件名称、路径、处理结果和错误信息。默认每个任务各保留最近 20 次上传日志和 20 次预览日志。</li>
+<li>工具没有开发者运营的文件中转服务器，不将备份文件或授权令牌发送给开发者，不包含广告或分析追踪功能。</li>
+</ul>
+<p>用户自行复制、分享、备份或通过其他程序读取本地文件的行为，不由本工具控制。</p>
+<h2>删除、撤销授权与停止运行</h2>
+<p>用户可以停用或移除任务、关闭定时任务，并通过 Google 账号的第三方连接管理页面撤销授权。撤销后，工具无法继续使用该授权访问云盘。</p>
+<p>移除任务或撤销授权不会自动删除本地文件或已经上传的备份。用户可以自行删除云盘中的副本与历史目录，也可以删除电脑中的任务配置、日志和授权文件。</p>
+<p>本地删除源文件不会触发本工具删除云端副本。云端历史副本不自动清理，会持续占用云盘空间，直到用户自行删除。</p>
+<h2>Google API 用户数据</h2>
+<p>本工具对通过 Google API 获得的信息的使用和向其他应用传输，应遵守 <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API 服务用户数据政策</a>，包括其中的 Limited Use 要求。</p>
+<h2>说明页面与联系信息</h2>
+<p>本说明页面由 GitHub Pages 托管。GitHub 会为安全目的记录访问者 IP 地址，具体请参阅 <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub 隐私声明</a>。页面本身不处理 Google 登录、不收集授权令牌，也不提供备份文件上传接口。</p>
+<p>本工具目前供所有者个人使用。如有数据处理或授权问题，请联系 petalcow@gmail.com。</p>
+<p><a href="./">返回应用主页</a></p>
+<footer>Next Decade Backup · 个人本地备份工具</footer>
+</main>
+</body>
+</html>

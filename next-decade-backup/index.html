@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Next Decade Backup 个人备份工具的功能说明与 Google Drive 数据处理政策。">
+<title>Next Decade Backup</title>
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<main>
+<nav aria-label="页面导航"><a href="./">应用说明</a><a href="./privacy.html">隐私政策</a></nav>
+<h1>Next Decade Backup</h1>
+<p>Next Decade Backup 是供所有者个人使用的本地文件备份工具。它在 Linux 电脑上调用 rclone，将用户明确选择的文件夹上传到用户自己的 Google Drive。</p>
+<h2>功能</h2>
+<ul>
+<li>按任务选择本地文件夹和云端目标目录，设置需要排除的文件。</li>
+<li>在上传前预览计划操作，上传时显示进度并保留本地日志。</li>
+<li>单向上传新增和修改的文件，本地原始文件继续保留。</li>
+<li>本地删除文件时保留云端副本，覆盖云端同名文件前保存旧版本。</li>
+<li>按用户设置的周期自动检查变化，默认每天一次。</li>
+</ul>
+<h2>Google Drive 授权</h2>
+<p>用户通过 Google 的登录与授权页面授予访问权限，工具使用本机保存的授权凭据执行任务。用户无需将 Google 密码提供给工具。</p>
+<p>工具请求 Google Drive 读写权限，用于比较文件、上传数据、维护云端目录、移动被覆盖的旧版本，以及读取存储配额。用户在工具中配置的任务和排除规则决定实际处理的范围；这些规则不等同于 Google 对 OAuth 权限的技术限制。</p>
+<p>工具运行于用户自己的电脑，没有由工具开发者运营的文件中转服务器。文件由用户电脑传输到用户选定的 Google Drive。</p>
+<p>详见<a href="./privacy.html">隐私政策</a>。</p>
+<p>联系邮箱：petalcow@gmail.com</p>
+<footer>Next Decade Backup · 个人本地备份工具</footer>
+</main>
+</body>
+</html>
