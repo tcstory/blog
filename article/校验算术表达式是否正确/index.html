@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>校验算术表达式是否正确 · 再见田园犬</title>
+<link rel="canonical" href="https://tcstory.github.io/blog/article/%E6%A0%A1%E9%AA%8C%E7%AE%97%E6%9C%AF%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%98%AF%E5%90%A6%E6%AD%A3%E7%A1%AE/">
+<link rel="stylesheet" href="/blog/style/next-decade.css">
+</head><body><header><a class="site-title" href="/blog/">破茧而出 化蝶飞舞</a>
+<nav><a href="/blog/">首页</a><a href="/blog/archives/">归档</a><a href="/blog/about/">关于</a></nav></header>
+<main><article><h1>校验算术表达式是否正确</h1><time datetime="2023-09-25">2023-09-25</time><p>去年年底, 由于我们公司要从神策迁移出来, 打算基于 <a href="https://dataease.io/">dataease</a>  自研一个数据平台. 主要需要做的就是把神策上的功能, 在 dataease 上实现一套.</p>
+<p>初期我要实现一个查询功能, 类似算术表达式, 支持括号嵌套. 第一步就是我需要校验这个算术表达式是否合法,包括括号是否匹配等.</p>
+<p>其实我很早之前看过一篇 <a href="https://runestone.academy/ns/books/published/pythonds/BasicDS/InfixPrefixandPostfixExpressions.html">文章</a> , 其实里面就提到了对于算术表达式的求值. 不过他只支持一级的括号嵌套, 而我的需求更就复杂一点.</p>
+<p>大致看一下, 这个查询功能长什么样子.</p>
+<p><img src="/blog/assets/journal/assets/github/03fb7df58c8c9e55318e.png" alt="图片" loading="lazy" decoding="async" /></p>
+<h2 id="实现">实现</h2>
+<p>由于我最近在学 golang, 所以, 我将用 golang 在实现这个功能.</p>
+<p class="source"><a href="https://github.com/tcstory/blog/issues/23">原始 GitHub 记录</a></p></article></main><footer>再见田园犬</footer></body></html>

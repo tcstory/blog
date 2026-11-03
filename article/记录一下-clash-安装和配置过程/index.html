@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>记录一下 clash 安装和配置过程 · 再见田园犬</title>
+<link rel="canonical" href="https://tcstory.github.io/blog/article/%E8%AE%B0%E5%BD%95%E4%B8%80%E4%B8%8B-clash-%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AE%E8%BF%87%E7%A8%8B/">
+<link rel="stylesheet" href="/blog/style/next-decade.css">
+</head><body><header><a class="site-title" href="/blog/">破茧而出 化蝶飞舞</a>
+<nav><a href="/blog/">首页</a><a href="/blog/archives/">归档</a><a href="/blog/about/">关于</a></nav></header>
+<main><article><h1>记录一下 clash 安装和配置过程</h1><time datetime="2023-04-01">2023-04-01</time><p>我之前一直使用的是 Qv2ray, 考虑到它很早不维护了, 并且, 似乎在 Android 上, clash 能做到根据域名来转发, 而 v2rayNG 只能做到根据 APP 来转发, 所以, 我打算研究一下, 把电脑上和手机上的代理, 全部切换到 clash 中.</p>
+<h2 id="manjaro">manjaro</h2>
+<p>我使用的是系统是 manjaro, 并且使用了 yacd, 一个第三方的 web 面板来进行管理和配置.</p>
+<p>首先说一下, 如何安装 clash</p>
+<p>使用 <code>sudo pacman -Syu clash</code>  就可以了,  然后, 在终端先执行一下 <code>clash</code> 命令, 让他先生成默认的配置文件.</p>
+<p>接下来, 我们安装 yacd, <code>sudo pacman -Syu yacd</code> , 并且修改配置文件来看它是否正常工作</p>
+<pre><code class="language-yaml">mixed-port: 7890
+allow-lan: false
+log-level: info
+external-ui: /usr/share/yacd/
+external-controller: 127.0.0.1:9090
+</code></pre>
+<p>保存配置文件, 并且启动 clash, 然后访问 <code>http://localhost:9090/ui/</code>, 如果一切正常, 你就应该能看到管理后台了.</p>
+<h2 id="理解转发规则">理解转发规则</h2>
+<p>由于我的机场服务, 只提供了 vmess 地址, 所以, 我通常需要一个转换器把 vmess 转成 clash 支持的订阅地址, 这需要我理解一下 clash 的配置文件的组成. 我大致整理了一下, 可以参考的文档在<a href="https://github.com/Dreamacro/clash/wiki/Configuration#dns">这里</a></p>
+<pre><code class="language-yaml">mode: Rule
+
+proxies:
+  - 新加坡服务器1 
+  - 新加坡服务器2
+  - 新加坡服务器3 
+  - 日本服务器1
+  - 日本服务器2
+
+proxy-groups:
+  - name: 手动选择
+    type: select
+    proxies:
+      - DIRECT
+      - 自动选择(新加坡)
+      - 自动选择(日本)
+  - name: 自动选择(新加坡)
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 5000
+    tolerance: 500
+    proxies:
+      - 新加坡服务器1 
+      - 新加坡服务器2
+      - 新加坡服务器3 
+  - name: 自动选择(日本)
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 5000
+    tolerance: 500
+    proxies:
+      - 日本1 
+      - 日本2
+</code></pre>
+<p>proxies 和 proxy-groups 的区别在于, proxies 里面指定单个服务器, 然后, 我们通常把属于一个国家的服务器来进行分类, 方便管理, 所以这就是 procy-groups 的作用, 你会看到, 我在这里添加了两个组别, 一个是新加坡, 一个是日本.</p>
+<p>最后, 你需要配置的是 <code>rules</code>, 也就是转发规则. 以前的时候, 你通常需要一个 gwflist, 但是由于我的服务商没有提供 clash 的订阅地址, 所以这一块需要我自己来处理.</p>
+<p class="source"><a href="https://github.com/tcstory/blog/issues/21">原始 GitHub 记录</a></p></article></main><footer>再见田园犬</footer></body></html>

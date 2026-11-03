@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>wsl2 移除 windows 环境变量 · 再见田园犬</title>
+<link rel="canonical" href="https://tcstory.github.io/blog/article/wsl2-%E7%A7%BB%E9%99%A4-windows-%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/">
+<link rel="stylesheet" href="/blog/style/next-decade.css">
+</head><body><header><a class="site-title" href="/blog/">破茧而出 化蝶飞舞</a>
+<nav><a href="/blog/">首页</a><a href="/blog/archives/">归档</a><a href="/blog/about/">关于</a></nav></header>
+<main><article><h1>wsl2 移除 windows 环境变量</h1><time datetime="2023-05-08">2023-05-08</time><p>不经意之间, 发现了这个问题, 其实通过 <code>echo $PATH</code> 也能观察到. 后面参考了这个<a href="https://gist.github.com/ilbunilcho/4280bd55a10cefef75e74986b6bff936">地址</a>, 把问题处理好了. 我大概列一下我用到的方案.</p>
+<ol>
+<li>为了能在 wsl2 里面, 输入 <code>code</code> 能直接打开 vs code, 所以我在 .zshrc 文件里面添加了 vs code 的环境变量 <code>export PATH=&quot;$PATH:/mnt/c/Users/rober/AppData/Local/Programs/Microsoft VS Code/bin&quot;</code></li>
+<li>然后打开 <code>/etc/wsl.conf</code>, 添加 <code>[interop] appendWindowsPath = false</code></li>
+</ol>
+<p class="source"><a href="https://github.com/tcstory/blog/issues/22">原始 GitHub 记录</a></p></article></main><footer>再见田园犬</footer></body></html>

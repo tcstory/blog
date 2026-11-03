@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>解决钉钉linux版本无法在 ubuntu 26.04 上启动的问题 · 再见田园犬</title>
+<link rel="canonical" href="https://tcstory.github.io/blog/article/%E8%A7%A3%E5%86%B3%E9%92%89%E9%92%89linux%E7%89%88%E6%9C%AC%E6%97%A0%E6%B3%95%E5%9C%A8-ubuntu-26.04-%E4%B8%8A%E5%90%AF%E5%8A%A8%E7%9A%84%E9%97%AE%E9%A2%98/">
+<link rel="stylesheet" href="/blog/style/next-decade.css">
+</head><body><header><a class="site-title" href="/blog/">破茧而出 化蝶飞舞</a>
+<nav><a href="/blog/">首页</a><a href="/blog/archives/">归档</a><a href="/blog/about/">关于</a></nav></header>
+<main><article><h1>解决钉钉linux版本无法在 ubuntu 26.04 上启动的问题</h1><time datetime="2026-02-24">2026-02-24</time><p>问过gemini, 使用了它提供的其中一个解决方案, 也就是使用 <code>execstack</code> 来处理这个问题.  由于 Ubuntu 26.04 不再提供这个包, 所以, gemini 告诉我可以手动下载, 但是它提供的下载地址是 404 了, 所以, 我在 Google 上搜索到了正确的地址了, 地址是从<a href="https://github.com/NapNeko/NapCatQQ/issues/1288">这里</a>拿到的, 下载地址是 <code>https://snapshot.debian.org/archive/debian/20250721T022532Z/pool/main/p/prelink/execstack_0.0.20131005-1%2Bb10_amd64.deb</code></p>
+<p>下载后, 通过下面的命令来解决就可以了</p>
+<ol>
+<li>sudo dpkg -i execstack_0.0.20131005-1+b10_amd64.deb</li>
+<li>sudo execstack -c /opt/apps/com.alibabainc.dingtalk/files/8.1.0-Release.6021101/dingtalk_dll.so</li>
+</ol>
+<p>没有使用 Flatpak 版本的 钉钉的原因是, 其实我之前就是安装了这个版本, 但是某次系统更新手, 发送文件会遇到 ssl 报错, 再加上这个版本是 7.x 的, 所以, 我觉得干脆安装钉钉提供的 deb 的版本, 他是 8.x 的了</p>
+<hr />
+<h2 id="github-后续补记与评论">GitHub 后续补记与评论</h2>
+<h3 id="2026-04-22-2214380800--外部评论非日记作者-xili666">2026-04-22 22:14:38+08:00 · 外部评论（非日记作者） @Xili666</h3>
+<p><a href="https://github.com/tcstory/blog/issues/31#issuecomment-4296951951">原评论</a></p>
+<h1 id="解决-debian-13-trixie-下共享库执行栈加载失败问题">解决 Debian 13 (Trixie) 下共享库“执行栈”加载失败问题</h1>
+<h2 id="1-问题现象">1. 问题现象</h2>
+<p>在 Debian 13 或更高版本的 Linux 发行版中运行旧版或闭源二进制程序（如钉钉、自研老旧 .so 库）时，程序启动失败并抛出以下错误：</p>
+<blockquote>
+<p><code>Load .../xxx.so failed! Err=.../xxx.so: cannot enable executable stack as shared object requires: Invalid argument</code></p>
+</blockquote>
+<h2 id="2-核心原理">2. 核心原理</h2>
+<ul>
+<li><strong>什么是可执行栈（Executable Stack）？</strong>
+在 ELF 文件的程序头（Program Header）中，有一个名为 <code>PT_GNU_STACK</code> 的段。它定义了程序运行时内存堆栈的权限。</li>
+<li><strong>为什么报错？</strong>
+出于安全考虑（防止缓冲区溢出攻击），现代 Linux 内核和动态链接器（ld.so）默认强制开启 <strong>NX (No-Execute)</strong> 保护。当一个共享库被标记为需要“可执行权限” ($R+W+E$)，而系统内核配置禁止这种高风险行为时，加载器会报 <code>Invalid argument</code> 错误。</li>
+</ul>
+<h2 id="3-环境演变避坑指南">3. 环境演变（避坑指南）</h2>
+<p>在旧版本 Debian/Ubuntu 中，我们通常使用 <code>execstack</code> 或 <code>paxctl</code>。但在 Debian 13 (Trixie) 中：</p>
+<ul>
+<li><strong>prelink (execstack):</strong> 已从仓库移除，上游停止维护。</li>
+<li><strong>paxctl:</strong> 已从官方主仓库移除。</li>
+<li><strong>替代方案:</strong> <strong><code>patchelf</code></strong> 成为目前最现代、最稳健的 ELF 修改工具。</li>
+</ul>
+<hr />
+<h2 id="4-解决方案使用-patchelf-手术">4. 解决方案：使用 <code>patchelf</code> 手术</h2>
+<h3 id="第一步安装工具">第一步：安装工具</h3>
+<pre><code class="language-bash">sudo apt update &amp;&amp; sudo apt install patchelf
+</code></pre>
+<h3 id="第二步清除可执行栈标志">第二步：清除可执行栈标志</h3>
+<p>直接修改有问题的 <code>.so</code> 文件，将其堆栈权限从 $RWE$ 降级为 $RW$：</p>
+<pre><code class="language-bash"># 替换为实际报错的库文件路径
+sudo patchelf --clear-execstack /path/to/your/problematic_library.so
+</code></pre>
+<h3 id="第三步验证修改">第三步：验证修改</h3>
+<p>使用 <code>elfutils</code> 提供的 <code>readelf</code> 工具检查修改结果：</p>
+<pre><code class="language-bash">readelf -l /path/to/your/problematic_library.so | grep -A 1 GNU_STACK
+</code></pre>
+<ul>
+<li><strong>预期输出：</strong> <code>Flags: RW</code></li>
+<li><strong>错误状态：</strong> <code>Flags: RWE</code>（如果看到 <code>E</code>，则说明该文件仍请求可执行权限）</li>
+</ul>
+<hr />
+<h2 id="5-进阶说明为什么清除标志不影响运行">5. 进阶说明：为什么清除标志不影响运行？</h2>
+<p>绝大多数软件（包括钉钉）在 <code>GNU_STACK</code> 中保留 <code>E</code> 权限通常是因为编译器版本过旧或编译配置不当，并非其代码逻辑真的需要在堆栈上执行指令。
+清除该标志后，内核会以标准的 $RW$ 模式加载它，从而通过安全性检查。</p>
+<h2 id="6-总结">6. 总结</h2>
+<p>在 Debian 13 环境下，处理此类兼容性问题的“三板斧”是：</p>
+<ol>
+<li><strong>定位：</strong> 通过报错日志锁定 <code>GNU_STACK</code> 段冲突。</li>
+<li><strong>工具：</strong> 舍弃 <code>execstack</code>，拥抱 <code>patchelf</code>。</li>
+<li><strong>修复：</strong> <code>patchelf --clear-execstack</code>。</li>
+</ol>
+<p class="source"><a href="https://github.com/tcstory/blog/issues/31">原始 GitHub 记录</a></p></article></main><footer>再见田园犬</footer></body></html>

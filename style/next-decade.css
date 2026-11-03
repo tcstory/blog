@@ -1,0 +1,29 @@
+:root { color-scheme: light dark; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans CJK SC", sans-serif; line-height: 1.85; color: #28323c; background: #faf9f6; }
+* { box-sizing: border-box; }
+body { max-width: 780px; padding: 32px 24px; margin: auto; overflow-wrap: anywhere; }
+a { color: #28618b; text-underline-offset: 4px; }
+header { border-bottom: 1px solid #deded8; padding-bottom: 22px; margin-bottom: 32px; }
+.site-title { font-size: 1.25rem; font-weight: 650; text-decoration: none; color: inherit; }
+nav { display: flex; gap: 22px; margin-top: 10px; font-size: .9rem; }
+nav a { text-decoration: none; }
+h1, h2, h3 { line-height: 1.5; margin-top: 1.8em; }
+h1 { font-size: 1.7rem; margin-top: 0; }
+h2 { font-size: 1.35rem; }
+h3 { font-size: 1.15rem; }
+time, small, footer, .source { color: #737a81; font-size: .85rem; font-weight: normal; }
+article > time { display: block; margin: -8px 0 28px; }
+.posts { list-style: none; padding: 0; }
+.posts li { display: grid; grid-template-columns: 100px 1fr; gap: 12px; margin: 20px 0; align-items: baseline; }
+.posts a { text-decoration: none; }
+.posts a:hover { text-decoration: underline; }
+img { display: block; max-width: 100%; height: auto; margin: 20px auto; }
+pre { overflow-x: auto; padding: 18px; border-radius: 6px; background: #eceeea; font-size: .88rem; line-height: 1.65; }
+code { font-family: ui-monospace, "Cascadia Code", "DejaVu Sans Mono", monospace; }
+:not(pre) > code { background: #eceeea; padding: 2px 5px; border-radius: 3px; }
+blockquote { margin: 22px 0; padding: 0 18px; border-left: 3px solid #a9b8be; color: #59636c; }
+table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; font-size: .9rem; }
+th, td { border: 1px solid #d9ddd8; padding: 7px 12px; }
+hr { border: 0; border-top: 1px solid #deded8; margin: 32px 0; }
+footer { border-top: 1px solid #deded8; margin-top: 50px; padding-top: 18px; }
+@media (max-width: 520px) { body { padding: 24px 18px; } .posts li { grid-template-columns: 1fr; gap: 0; margin: 23px 0; } h1 { font-size: 1.4rem; } }
+@media (prefers-color-scheme: dark) { :root { color: #d5d9de; background: #191d22; } a { color: #8bb8df; } pre, :not(pre) > code { background: #232a31; } header, footer, hr, th, td { border-color: #3c434b; } blockquote { color: #aeb7c0; } time, small, footer, .source { color: #a0a8b0; } }

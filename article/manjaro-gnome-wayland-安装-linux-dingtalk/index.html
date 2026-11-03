@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>manjaro gnome wayland 安装 linux dingtalk · 再见田园犬</title>
+<link rel="canonical" href="https://tcstory.github.io/blog/article/manjaro-gnome-wayland-%E5%AE%89%E8%A3%85-linux-dingtalk/">
+<link rel="stylesheet" href="/blog/style/next-decade.css">
+</head><body><header><a class="site-title" href="/blog/">破茧而出 化蝶飞舞</a>
+<nav><a href="/blog/">首页</a><a href="/blog/archives/">归档</a><a href="/blog/about/">关于</a></nav></header>
+<main><article><h1>manjaro gnome wayland 安装 linux dingtalk</h1><time datetime="2022-01-29">2022-01-29</time><p>记录一下配置的过程.</p>
+<p>使用的是 yay 来安装的, 然后, 后续你有两个问题要解决:</p>
+<ol>
+<li>缩放问题</li>
+<li>fcitx 输入法的问题</li>
+</ol>
+<h2 id="缩放问题">缩放问题</h2>
+<p>由于我使用的是 4k 分辨率的显示器, 所以我必须要调整缩放, 调整缩放的过程也很简单, 只需要在钉钉里面设置就行了, 如下图所示:</p>
+<p>先点击左上角自己的头像, 然后就会弹出这个界面</p>
+<p><img src="/blog/assets/journal/assets/github/660d81633c41378011d6.png" alt="image" loading="lazy" decoding="async" /></p>
+<h2 id="fcitx-输入法的问题">fcitx 输入法的问题</h2>
+<p>执行 <code>sudo vim /usr/bin/dingtalk</code> 来打开这个文件, 把文件内容修改成下面这样就行了.</p>
+<pre><code class="language-bash">#!/bin/bash -e
+cd /opt/dingtalk/release
+QT_IM_MODULE=fcitx ./com.alibabainc.dingtalk
+</code></pre>
+<p class="source"><a href="https://github.com/tcstory/blog/issues/16">原始 GitHub 记录</a></p></article></main><footer>再见田园犬</footer></body></html>

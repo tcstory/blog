@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>如何绕过 javascript 的 eval 的使用限制 · 再见田园犬</title>
+<link rel="canonical" href="https://tcstory.github.io/blog/article/%E5%A6%82%E4%BD%95%E7%BB%95%E8%BF%87-javascript-%E7%9A%84-eval-%E7%9A%84%E4%BD%BF%E7%94%A8%E9%99%90%E5%88%B6/">
+<link rel="stylesheet" href="/blog/style/next-decade.css">
+</head><body><header><a class="site-title" href="/blog/">破茧而出 化蝶飞舞</a>
+<nav><a href="/blog/">首页</a><a href="/blog/archives/">归档</a><a href="/blog/about/">关于</a></nav></header>
+<main><article><h1>如何绕过 javascript 的 eval 的使用限制</h1><time datetime="2020-02-15">2020-02-15</time><p>最近读了这篇文章, 让我回忆了一下我曾经学过的 eopl3, 自己也试着写了一个超级简单的解释器, 来描述执行函数的过程是怎么样的, 看了这个过程, 也就能明白为何文章里提到的方法可以绕过 <code>eval</code>.</p>
+<p>不过, 预期重新写一个 js 的解释器, 还不如直接使用 quickjs 更为方便.</p>
+<p>文章的地址是: https://zhuanlan.zhihu.com/p/34191831</p>
+<p>自己写的解释器如下:</p>
+<pre><code class="language-js">    function FunctionExpression(fnName, args, body) {
+        this.fnName = fnName;
+        this.args = args;
+        this.body = body;
+    }
+
+    function CallExpression(fnName, args) {
+        this.fnName = fnName;
+        this.args = args;
+    }
+
+    function VariableExpression(key) {
+        this.key = key;
+    }
+
+    function NumberExpression (n) {
+        this.value = Number(n);
+    }
+
+    function ConsoleExpression(expr) {
+        this.expr = expr;
+    }
+
+    function findByName(env, name) {
+        for (let item of env) {
+            if (item.key === name) {
+                return item.value;
+            }
+        }
+
+        return null;
+    }
+
+    // 一个解释 js 的 js 版本的解释器
+    function valueOf(env, node) {
+        if (node instanceof NumberExpression) {
+            return node.value;
+        } else if (node instanceof VariableExpression) {
+            let value = findByName(env, node.key);
+
+            if (value) {
+                return findByName(env, node.key);
+            } else {
+                throw new Error('变量不存在')
+            }
+        } else if (node instanceof ConsoleExpression) {
+            let value = valueOf(env, node.expr);
+            console.log('[value]', value);
+        } else if (node instanceof CallExpression) {
+            let func = findByName(env, node.fnName);
+
+            if (func) {
+                let args = node.args.map(function (arg, idx) {
+                    let value = valueOf(env, arg);
+                    return {
+                        key: func.args[idx],
+                        value,
+                    }
+                });
+                valueOf(env.concat(args), func.body);
+            } else {
+                throw new Error('函数不存在');
+            }
+        } else {
+            // 暂时先不管这里
+        }
+    }
+
+    // 下面展示一下执行一个函数调用的过程
+    // 要执行 function print(n) { console.log(n); }; print(3);
+    // 为了方便, 直接手写 ast
+    let fnDecl = {
+        key: 'print',
+        value: new FunctionExpression(
+            'print',
+            ['n'],
+            new ConsoleExpression(new VariableExpression('n'))
+        )
+    };
+
+    valueOf([fnDecl], new CallExpression('print', [new NumberExpression('3')]));
+</code></pre>
+<p class="source"><a href="https://github.com/tcstory/blog/issues/6">原始 GitHub 记录</a></p></article></main><footer>再见田园犬</footer></body></html>

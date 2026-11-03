@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>文石小白馬 P6+ (BOOX P6XPlus) Google Play 更新應用閃退問題定位與修復報告 · 再见田园犬</title>
+<link rel="canonical" href="https://tcstory.github.io/blog/article/%E6%96%87%E7%9F%B3%E5%B0%8F%E7%99%BD%E9%A6%AC-P6%2B-%28BOOX-P6XPlus%29-Google-Play-%E6%9B%B4%E6%96%B0%E6%87%89%E7%94%A8%E9%96%83%E9%80%80%E5%95%8F%E9%A1%8C%E5%AE%9A%E4%BD%8D%E8%88%87%E4%BF%AE%E5%BE%A9%E5%A0%B1%E5%91%8A/">
+<link rel="stylesheet" href="/blog/style/next-decade.css">
+</head><body><header><a class="site-title" href="/blog/">破茧而出 化蝶飞舞</a>
+<nav><a href="/blog/">首页</a><a href="/blog/archives/">归档</a><a href="/blog/about/">关于</a></nav></header>
+<main><article><h1>文石小白馬 P6+ (BOOX P6XPlus) Google Play 更新應用閃退問題定位與修復報告</h1><time datetime="2026-10-20">2026-10-20</time><ul>
+<li><strong>設備型號</strong>：Onyx BOOX <code>P6XPlus</code>（文石小白馬 P6+）</li>
+<li><strong>系統版本</strong>：Android 13 (<code>2026-09-30_11-45_4.2.3-rel_0930_c353a5268</code>)</li>
+<li><strong>Google Play 版本</strong>：<code>com.android.vending</code> <code>53.6.15-31 [0] [PR] 996698724</code> (<code>versionCode=85361530</code>)</li>
+<li><strong>診斷日期</strong>：2026-10-19</li>
+</ul>
+<hr />
+<h2 id="一-問題現象">一、 問題現象</h2>
+<p>在設備升級至 <code>4.2.3</code> (<code>2026-09-30_11-45_4.2.3-rel_0930_c353a5268</code>) 系統後：</p>
+<ol>
+<li>從文石桌面點擊 Google Play 商店圖示，<strong>可以正常進入主畫面</strong>。</li>
+<li>但一旦在 Google Play 內點擊<strong>更新應用</strong>（或觸發其他內部頁面跳轉 <code>startActivity</code>），Google Play 會<strong>立即閃退（Crash）</strong>。</li>
+</ol>
+<hr />
+<h2 id="二-崩潰日誌crash-logcat">二、 崩潰日誌（Crash Logcat）</h2>
+<p>透過 <code>adb logcat -b crash</code> 捕獲到的核心崩潰堆疊如下：</p>
+<pre><code class="language-text">10-19 15:26:14.901 23960 23960 I Finsky  : [2] Sending update intent for [{com.android.chrome:ItSfFfUtCfPf}, {com.google.android.inputmethod.latin:ItSfFfUtCfPf}, {com.qianyan.eudic:ItSfFfUtCfPf}, {org.mozilla.firefox:ItSfFfUtCfPf}]
+10-19 15:26:14.921 23960 23960 E AndroidRuntime: FATAL EXCEPTION: main
+10-19 15:26:14.921 23960 23960 E AndroidRuntime: Process: com.android.vending, PID: 23960
+10-19 15:26:14.921 23960 23960 E AndroidRuntime: java.lang.SecurityException: This app is not allowed to start because Google Play is disabled.
+10-19 15:26:14.921 23960 23960 E AndroidRuntime: 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3011)
+10-19 15:26:14.921 23960 23960 E AndroidRuntime: 	at android.os.Parcel.createException(Parcel.java:2995)
+10-19 15:26:14.921 23960 23960 E AndroidRuntime: 	at android.os.Parcel.readException(Parcel.java:2978)
+10-19 15:26:14.921 23960 23960 E AndroidRuntime: 	at android.os.Parcel.readException(Parcel.java:2920)
+10-19 15:26:14.921 23960 23960 E AndroidRuntime: 	at android.app.IActivityTaskManager$Stub$Proxy.startActivity(IActivityTaskManager.java:2206)
+10-19 15:26:14.921 23960 23960 E AndroidRuntime: 	at android.app.Instrumentation.execStartActivity(Instrumentation.java:1836)
+10-19 15:26:14.921 23960 23960 E AndroidRuntime: 	at android.app.Activity.startActivityForResult(Activity.java:5507)
+10-19 15:26:14.921 23960 23960 E AndroidRuntime: 	at zzzi.startActivityForResult(PG:50)
+10-19 15:26:14.921 23960 23960 E AndroidRuntime: 	at android.app.Activity.startActivityForResult(Activity.java:5465)
+10-19 15:26:14.921 23960 23960 E AndroidRuntime: 	at android.app.Activity.startActivity(Activity.java:5963)
+10-19 15:26:14.921 23960 23960 E AndroidRuntime: 	at android.app.Activity.startActivity(Activity.java:5930)
+...
+10-19 15:26:14.921 23960 23960 E AndroidRuntime: Caused by: android.os.RemoteException: Remote stack trace:
+10-19 15:26:14.921 23960 23960 E AndroidRuntime: 	at com.android.server.wm.ActivityStarter.executeRequest(ActivityStarter.java:865)
+10-19 15:26:14.921 23960 23960 E AndroidRuntime: 	at com.android.server.wm.ActivityStarter.execute(ActivityStarter.java:709)
+10-19 15:26:14.921 23960 23960 E AndroidRuntime: 	at com.android.server.wm.ActivityTaskManagerService.startActivityAsUser(ActivityTaskManagerService.java:1306)
+</code></pre>
+<hr />
+<h2 id="三-根因分析系統框架反編譯">三、 根因分析（系統框架反編譯）</h2>
+<h3 id="1-servicesjar-中的-activity-啟動攔截邏輯">1. <code>services.jar</code> 中的 Activity 啟動攔截邏輯</h3>
+<p>反編譯 <code>/system/framework/services.jar</code> 中的 <code>com.android.server.wm.ActivityStarter.executeRequest(Request)</code>（對應源碼第 860–865 行），還原其字節碼邏輯如下：</p>
+<pre><code class="language-java">// com.android.server.wm.ActivityStarter.executeRequest
+String callingPackage = request.callingPackage;
+if (!DeviceConfig.singleton().isGmsEnabled()
+        &amp;&amp; ActivityManagerHelper.isDisallow(callingPackage)
+        &amp;&amp; !ActivityManagerHelper.isSystemApp(callingPackage)) {
+    throw new SecurityException(&quot;This app is not allowed to start because Google Play is disabled.&quot;);
+}
+</code></pre>
+<h3 id="2-frameworkjar-中的-activitymanagerhelper-與-constant-判定邏輯">2. <code>framework.jar</code> 中的 <code>ActivityManagerHelper</code> 與 <code>Constant</code> 判定邏輯</h3>
+<p>反編譯 <code>/system/framework/framework.jar</code> 中的 <code>android.onyx.utils.ActivityManagerHelper</code> 與 <code>android.onyx.optimization.Constant</code>：</p>
+<pre><code class="language-java">// android.onyx.optimization.Constant
+static {
+    DISABLED_PACKAGES = new HashSet&lt;&gt;();
+    DISABLED_PACKAGES.add(&quot;com.android.vending&quot;);
+}
+
+// android.onyx.utils.ActivityManagerHelper
+public static boolean isDisallow(String packageName) {
+    return Constant.DISABLED_PACKAGES.contains(packageName) &amp;&amp; !gmsEnabled();
+}
+
+public static boolean gmsEnabled() {
+    return OnyxMMKVConfigHelper.getBool(&quot;gms_enable&quot;, false);
+}
+
+public static boolean isSystemApp(String pkgName) {
+    PackageInfo pkgInfo = ActivityThread.getPackageManager().getPackageInfo(pkgName, 1L, 0);
+    return (pkgInfo.applicationInfo.flags &amp; (ApplicationInfo.FLAG_SYSTEM | ApplicationInfo.FLAG_UPDATED_SYSTEM_APP)) &gt; 0;
+}
+</code></pre>
+<h3 id="3-為什麼會出現能打開-google-play但點更新就閃退的現象">3. 為什麼會出現「能打開 Google Play，但點更新就閃退」的現象？</h3>
+<ul>
+<li><strong>從桌面打開 Google Play 時</strong>：
+呼叫 <code>startActivity</code> 的發起方（<code>request.callingPackage</code>）是文石桌面 <code>com.onyx</code>。因為 <code>Constant.DISABLED_PACKAGES</code> 裡只有 <code>&quot;com.android.vending&quot;</code>，<code>ActivityManagerHelper.isDisallow(&quot;com.onyx&quot;)</code> 返回 <code>false</code>，因此<strong>桌面可以正常啟動 Google Play</strong>。</li>
+<li><strong>在 Google Play 內部點擊「更新」時</strong>：
+Google Play 內部透過 <code>Activity.startActivity</code> 發起頁面跳轉，此時發起方 <code>request.callingPackage</code> 變成了 <code>&quot;com.android.vending&quot;</code>：
+<ol>
+<li><code>DeviceConfig.singleton().isGmsEnabled()</code>：國內版機型預設為 <code>false</code>。</li>
+<li><code>ActivityManagerHelper.isDisallow(&quot;com.android.vending&quot;)</code>：檢查 <code>/onyxconfig/mmkv/onyx_config</code> 中的 <code>gms_enable</code> 鍵值。由於該值為 <code>false</code>，因此返回 <code>true</code>。</li>
+<li><code>!ActivityManagerHelper.isSystemApp(&quot;com.android.vending&quot;)</code>：在 P6XPlus 上，<code>GmsCore</code>（Google Play 服務）預裝在 <code>/product/priv-app/GmsCore</code>（屬於系統應用），但 <strong>Google Play 商店（<code>com.android.vending</code>）安裝在 <code>/data/app/</code> 下，屬於普通用戶應用（無 <code>FLAG_SYSTEM</code> 標記）</strong>，因此 <code>!isSystemApp</code> 返回 <code>true</code>。</li>
+<li>三個條件同時滿足，<code>system_server</code> 直接向 Google Play 拋出 <code>SecurityException(&quot;This app is not allowed to start because Google Play is disabled.&quot;)</code>，導致 Google Play 崩潰閃退。</li>
+</ol>
+</li>
+</ul>
+<h3 id="4-為什麼系統更新後-gms_enable-被改成了-false">4. 為什麼系統更新後 <code>gms_enable</code> 被改成了 <code>false</code>？</h3>
+<p>反編譯 <code>/system/priv-app/kcb-release/kcb-release.apk</code>（文石系統桌面 <code>com.onyx</code>）中的 <code>com.onyx.common.setting.action.CheckGMSAction</code>：</p>
+<pre><code class="language-java">// com.onyx.common.setting.action.CheckGMSAction
+private final boolean checkGooglePlayFromServer() {
+    String baseUrl = getClusterInfo().loadOnyxApiBaseUrl();
+    Response&lt;ResponseData&gt; response = RetrofitUtils.executeCall(
+        ServiceFactory.getContentService(baseUrl).checkGooglePlay(Build.MODEL) // Build.MODEL = &quot;P6XPlus&quot;
+    );
+    if (response.isSuccessful() &amp;&amp; response.body().isSuccessful()) {
+        CheckGMSAction.checked = true;
+        JSONObject data = (JSONObject) response.body().data;
+        return data.getBooleanValue(&quot;allowed&quot;, false);
+    }
+    return false;
+}
+
+private final CheckGMSAction saveGMSEnable(boolean enable) {
+    OnyxSystemMMKVUtils.putBool(&quot;gms_enable&quot;, enable);
+    return this;
+}
+</code></pre>
+<p>當設備升級系統並聯網後，<code>CheckGMSAction</code> 向文石伺服器查詢 <code>checkGooglePlay(&quot;P6XPlus&quot;)</code>，伺服器返回 <code>allowed: false</code>（或請求未通過），進而呼叫 <code>OnyxSystemMMKVUtils.putBool(&quot;gms_enable&quot;, false)</code> 將 <code>/onyxconfig/mmkv/onyx_config</code> 內的 <code>gms_enable</code> 覆寫為 <code>false</code>。</p>
+<hr />
+<h2 id="四-修復方法與操作記錄">四、 修復方法與操作記錄</h2>
+<p>由於 <code>/onyxconfig/mmkv/onyx_config</code> 採用跨進程共享記憶體映射（<code>MMKV.MULTI_PROCESS_MODE</code>），且檔案權限為 <code>-rw-rw-rw-</code>，同時 <code>/system/framework/framework.jar</code> 中的 <code>android.onyx.optimization.BaseMMKV</code> 對 <code>app_process</code> 開放了 <code>SDK,TEST-API</code> 訪問權限，因此<strong>無需 Root 權限</strong>即可透過 ADB 直接呼叫系統 API 將 <code>gms_enable</code> 改為 <code>true</code>。</p>
+<h3 id="1-透過-adb-啟用-gms_enable">1. 透過 ADB 啟用 <code>gms_enable</code></h3>
+<p>我們已將編譯好的修復工具推送到設備 <code>/data/local/tmp/fix_gms.jar</code> 並執行：</p>
+<pre><code class="language-bash">adb shell &quot;CLASSPATH=/data/local/tmp/fix_gms.jar app_process / FixGms&quot;
+</code></pre>
+<p>執行輸出：</p>
+<pre><code class="language-text">Before gms_enable = false
+After gms_enable = true
+</code></pre>
+<h3 id="2-日後若重啟設備後再次遇到閃退的快速恢復指令">2. 日後若重啟設備後再次遇到閃退的快速恢復指令</h3>
+<p>因為 <code>/data/local/tmp/fix_gms.jar</code> 已經保留在您的設備中（除非恢復出廠設置，否則不會丟失），如果日後設備重啟聯網後被文石桌面再次改回 <code>false</code>，只需連上電腦執行以下一行指令即可立即恢復（無需重啟設備）：</p>
+<pre><code class="language-bash">adb shell &quot;CLASSPATH=/data/local/tmp/fix_gms.jar app_process / FixGms&quot;
+</code></pre>
+<p>對應的 <code>FixGms.java</code> 源碼備份如下：</p>
+<pre><code class="language-java">import android.onyx.optimization.BaseMMKV;
+
+public class FixGms {
+    public static void main(String[] args) {
+        boolean before = BaseMMKV.getBool(&quot;gms_enable&quot;, false);
+        System.out.println(&quot;Before gms_enable = &quot; + before);
+        BaseMMKV.saveValue(&quot;gms_enable&quot;, true);
+        boolean after = BaseMMKV.getBool(&quot;gms_enable&quot;, false);
+        System.out.println(&quot;After gms_enable = &quot; + after);
+    }
+}
+</code></pre>
+<p class="source"><a href="https://github.com/tcstory/blog/issues/39">原始 GitHub 记录</a></p></article></main><footer>再见田园犬</footer></body></html>

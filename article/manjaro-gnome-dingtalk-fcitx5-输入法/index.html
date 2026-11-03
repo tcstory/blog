@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>manjaro gnome dingtalk fcitx5 输入法 · 再见田园犬</title>
+<link rel="canonical" href="https://tcstory.github.io/blog/article/manjaro-gnome-dingtalk-fcitx5-%E8%BE%93%E5%85%A5%E6%B3%95/">
+<link rel="stylesheet" href="/blog/style/next-decade.css">
+</head><body><header><a class="site-title" href="/blog/">破茧而出 化蝶飞舞</a>
+<nav><a href="/blog/">首页</a><a href="/blog/archives/">归档</a><a href="/blog/about/">关于</a></nav></header>
+<main><article><h1>manjaro gnome dingtalk fcitx5 输入法</h1><time datetime="2022-09-21">2022-09-21</time><p>在网上找了好多方法, 都没有能正确给钉钉 linux 设置输入法.
+好不容易找到了, 现在做一个记录</p>
+<p>编辑 <code>/usr/bin/dingtalk</code>, 添加 <code>export QT_IM_MODULE=fcitx</code> 就可以了. 需要记住的是, 虽然我使用的是 fcitx5, 但是环境变量还是要写成 <code>fcitx</code></p>
+<p>参考资料在这里: https://aur.archlinux.org/packages/dingtalk-bin?O=70</p>
+<hr />
+<h2 id="github-后续补记与评论">GitHub 后续补记与评论</h2>
+<h3 id="2023-10-15-0222030800--作者补记-tcstory">2023-10-15 02:22:03+08:00 · 作者补记 @tcstory</h3>
+<p><a href="https://github.com/tcstory/blog/issues/20#issuecomment-1763105684">原评论</a></p>
+<p>不过在我的 endeavour os 安装最新的钉钉后, 一切正常, 不需要额外设置了</p>
+<p class="source"><a href="https://github.com/tcstory/blog/issues/20">原始 GitHub 记录</a></p></article></main><footer>再见田园犬</footer></body></html>

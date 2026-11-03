@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>drop down termianl on ganome 40.x wayland · 再见田园犬</title>
+<link rel="canonical" href="https://tcstory.github.io/blog/article/drop-down-termianl-on-ganome-40.x-wayland/">
+<link rel="stylesheet" href="/blog/style/next-decade.css">
+</head><body><header><a class="site-title" href="/blog/">破茧而出 化蝶飞舞</a>
+<nav><a href="/blog/">首页</a><a href="/blog/archives/">归档</a><a href="/blog/about/">关于</a></nav></header>
+<main><article><h1>drop down termianl on ganome 40.x wayland</h1><time datetime="2022-08-11">2022-08-11</time><p>I like drop down terminal. I used to use tilda before gnome 40.x. after i swittched to gnome 40.x, I found that tilda can not work on it. so i decided to search for another solution. finally I got two.</p>
+<p>the first solution is <a href="https://github.com/ddterm/gnome-shell-extension-ddterm">ddterm</a>, it works fine.
+and another sulution is <a href="https://github.com/alacritty/alacritty">alacritty</a> with <a href="https://github.com/repsac-by/gnome-shell-extension-quake-mode">quake mode</a>, alacritty is high perfomant terminal. it also works fine in gnome wayland. and quake mode can make any program works like 'drop down'.</p>
+<p>why I use the second solution is I found that wl-copy couldn't work well on ddterm, it cannot paste text from system clipboard when I pressed <code>p</code>, but the <code>ctrl-shift-v</code> worked.</p>
+<p>the following is my alactritty configuration</p>
+<pre><code class="language-yaml"># 背景半透明，方便抄代码
+window:
+  opacity: 0.90
+
+# 实时重载配置文件，不用重启测试配置选项
+live_config_reload: true
+
+# 主题，抄肥猫的主题配色
+colors:
+  # Default colors
+  primary:
+    background: '0x292C3E'
+    foreground: '0xEBEBEB'
+
+  # Cursor colors
+  cursor:
+    text: '0xFF261E'
+    cursor: '0xFF261E'
+
+  # Normal colors
+  normal:
+    black:   '0x0d0d0d'
+    red:     '0xFF301B'
+    green:   '0xA0E521'
+    yellow:  '0xFFC620'
+    blue:    '0x1BA6FA'
+    magenta: '0x8763B8'
+    cyan:    '0x21DEEF'
+    white:   '0xEBEBEB'
+
+  # Bright colors
+  bright:
+    black:   '0x6D7070'
+    red:     '0xFF4352'
+    green:   '0xB8E466'
+    yellow:  '0xFFD750'
+    blue:    '0x1BA6FA'
+    magenta: '0xA578EA'
+    cyan:    '0x73FBF1'
+    white:   '0xFEFEF8'
+
+# 字体设置为等宽字体，可以用命令 fc-list 查看你系统的字体
+font:
+  size: 13
+
+  normal:
+    family: IBM Plex Mono
+    style: Regular
+
+  bold:
+    family: IBM Plex Mono
+    style: Bold
+
+  italic:
+    family: IBM Plex Mono
+    style: Italic
+
+
+env:
+  TERM: xterm-256color
+
+</code></pre>
+<p class="source"><a href="https://github.com/tcstory/blog/issues/18">原始 GitHub 记录</a></p></article></main><footer>再见田园犬</footer></body></html>

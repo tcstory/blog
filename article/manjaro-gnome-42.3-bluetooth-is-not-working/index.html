@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>manjaro gnome 42.3 bluetooth is not working · 再见田园犬</title>
+<link rel="canonical" href="https://tcstory.github.io/blog/article/manjaro-gnome-42.3-bluetooth-is-not-working/">
+<link rel="stylesheet" href="/blog/style/next-decade.css">
+</head><body><header><a class="site-title" href="/blog/">破茧而出 化蝶飞舞</a>
+<nav><a href="/blog/">首页</a><a href="/blog/archives/">归档</a><a href="/blog/about/">关于</a></nav></header>
+<main><article><h1>manjaro gnome 42.3 bluetooth is not working</h1><time datetime="2022-07-13">2022-07-13</time><p>我的蓝牙是 interl a200, 在某一次的滚动更新后, 我发现了两件事:</p>
+<ol>
+<li>每次重启后发现, 蓝牙是默认关闭的</li>
+<li>gnome 的蓝牙面板, 无法打开蓝牙了</li>
+</ol>
+<p>第一个问题对我的影响不大, 所以, 我没有打算处理第一个问题. 现在主要来讨论第二个问题. 先说解决方案</p>
+<pre><code class="language-bash">sudo modprobe -r btusb
+sudo modprobe btusb
+</code></pre>
+<p>参考的资料有:</p>
+<ol>
+<li>https://forum.manjaro.org/t/intel-bluetooth-not-working/104849</li>
+<li>https://wiki.archlinux.org/title/Bluetooth#bluetoothctl:_No_default_controller_available</li>
+</ol>
+<p>简单来说, 就是我执行 <code>sudo bluetoothctl devices</code> 的时候, 发现没有输入, 然后在 archlinux 的那篇文档也提到了相关的解决方案.
+如果你发现你的电脑没有 <code>bluetoothctl</code> 命令的话, 可以通过安装 <code>bluez-utils</code> 来获取.</p>
+<p>我顺便学到了一个 pacman 的命令, 就是 <code>pacman -F xxx</code>, 这个命令会告诉你, 如果你想使用 xxx 命令, 你可以安装哪些包来获取这个命令</p>
+<p class="source"><a href="https://github.com/tcstory/blog/issues/17">原始 GitHub 记录</a></p></article></main><footer>再见田园犬</footer></body></html>
