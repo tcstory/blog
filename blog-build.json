@@ -9,8 +9,8 @@
     "archives/2022/index.html": "c69aa83ef37232c34784b95a3e8e6bb7d1fcc13293333dc1c899d44d26dd10c3",
     "archives/2023/index.html": "53772e771ed34ca76da299609f2fe136aba4d9bb4d24553cb76eea5b6fb374b6",
     "archives/2025/index.html": "0fe0008da69608e05c2719f503088d2a063fc113993d1a6282fb4906b0f6dc96",
-    "archives/2026/index.html": "2a374eda2f637201bf8c56475ef608dee04de21d1693a992a04f99a9d604dc6e",
-    "archives/index.html": "24ebbe009b7c5aecedd7aea5331c1f3bd7fdd05fcca4ca8200b29d93c9c0e9cf",
+    "archives/2026/index.html": "dce25b5c6cb8693defa9c9e603053601ea93e15022b8a51b875b80ca3ee79060",
+    "archives/index.html": "0f1f3dc26c3d54922ee1835bf781baaf9f41fef5b56e03e07b7aa80ed738c050",
     "article/2019年总结/index.html": "969df364f753f7fcaad66aa71ef16f67b7c3f41dd98597532083dd3574a04c70",
     "article/2026-03-08-见闻/index.html": "f3b5b4cbf45eb41aa52f4f7db6ac271b818132b7fb0e5c5c1fc30167ae5a1b04",
     "article/2026-03-22-碎碎念/index.html": "7ce05c8d8204f997e8e5fe1c9e61e1052f0519590f29a1c06da28def4b743a02",
@@ -21,7 +21,7 @@
     "article/manjaro-gnome-wayland-安装-linux-dingtalk/index.html": "c9dc2dc87c004101b81680ddf84e66a96a73df7c8799a3bfc03fc172920f3403",
     "article/wsl2-移除-windows-环境变量/index.html": "216d8eff8eec175dd71fe02317fc960f042ea73e6cec1d93ae13131a8dadba7b",
     "article/《断龙台》/index.html": "e849257bc4fb4c2de5b9d82db623273c90a8572cbffd6605c72c6ba6c9158f1b",
-    "article/《本体驱动的AI数据管理》,-我和-antigravity-3.8-flash-medium-的讨论/index.html": "f3cc29d8899a711055e0d157eeb3b83a022894cdc0023073ae6965a73fc10aa5",
+    "article/《本体驱动的AI数据管理》对话全录/index.html": "3e30bece8847495d9b33b64d84d6e3915041d25fc9e73ba07be7166a677b6dc0",
     "article/使用-toggler-来快速展示和隐藏终端/index.html": "f6a45898f428369370c860a1f5599b2c02c144a64e830c211a241a15a7b62d11",
     "article/再次阅读《棒球英豪》/index.html": "13ed2e536d2fdbfaf741a34fbeeb9e0709ccf2bc6059f8f0b065157f77d437dc",
     "article/前端相关的文章/index.html": "c424762885e63e789633ba4bfd9eb0a36bc0de57d13aac53e5da085570020eff",
@@ -87,7 +87,7 @@
     "assets/journal/assets/github/660d81633c41378011d6.png": "ba19ef61cf86e2e16458dc80ae40d5ab0c3aa8039229d6c250f545fb5afba97a",
     "assets/journal/assets/github/6f41c31682c7ced4e5d4.jpg": "cf80b8986e651f90722fe900e3b21c3096c9fa0717e3b36a07c811a3c3cd881e",
     "assets/journal/assets/github/d083f8bdd887b63726cc.jpg": "25c4ecc1926dd3b5da25057fb0359115b729e30dbd9bc54736a52b1861720ae8",
-    "index.html": "aaf03c8e3f73c7c6bea6ebe749648f1d17630e741b4ca7396c054b6d3fc497ef",
+    "index.html": "1a4c9bb421cdca6680e27bcc3260631947479888dc34514d23a869cf33190e53",
     "style/next-decade.css": "421d65f0eed16592f01f0858fe0d088356c1464231262b416e1c03d242231960"
   }
 }
